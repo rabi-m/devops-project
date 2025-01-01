@@ -1,0 +1,30 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # الخطوة 1: نسخ المستودع
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # الخطوة 2: تسجيل الدخول إلى Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # الخطوة 3: بناء الصورة
+      - name: Build Docker Image
+        run: docker build -t username/devops-project:latest .
+
+      # الخطوة 4: رفع الصورة إلى Docker Hub
+      - name: Push Docker Image
+        run: docker push username/devops-project:latest
